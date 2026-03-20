@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 const CLIENT_URL = process.env.CLIENT_URL || 'http://localhost:5173';
-const FALLBACK_CLIENT_URL = 'https://route-optimizer-frontend.vercel.app'; // Update with actual production URL if known
+const FALLBACK_CLIENT_URL = 'http://localhost:5173';
 
 // Helper: generate JWT and send it to the frontend via postMessage
 function handleOAuthCallback(req, res) {

@@ -2,23 +2,23 @@ import { useState, useRef, useEffect } from "react";
 import { searchAll } from "../utils/routeSearch";
 
 const CATEGORY_ICONS = {
-  station: 'fas fa-subway',
-  Monument: 'fas fa-landmark',
-  Market: 'fas fa-shopping-cart',
-  Hospital: 'fas fa-hospital',
-  University: 'fas fa-graduation-cap',
-  Transport: 'fas fa-bus-alt',
-  Government: 'fas fa-building',
-  Park: 'fas fa-tree',
-  Temple: 'fas fa-place-of-worship',
-  Mall: 'fas fa-shopping-bag',
-  Stadium: 'fas fa-republican',
-  Museum: 'fas fa-palette',
-  Office: 'fas fa-briefcase',
-  Restaurant: 'fas fa-utensils',
-  Residential: 'fas fa-home',
-  Cinema: 'fas fa-film',
-  Hotel: 'fas fa-hotel',
+  station: "fas fa-subway",
+  Monument: "fas fa-landmark",
+  Market: "fas fa-shopping-cart",
+  Hospital: "fas fa-hospital",
+  University: "fas fa-graduation-cap",
+  Transport: "fas fa-bus-alt",
+  Government: "fas fa-building",
+  Park: "fas fa-tree",
+  Temple: "fas fa-place-of-worship",
+  Mall: "fas fa-shopping-bag",
+  Stadium: "fas fa-republican",
+  Museum: "fas fa-palette",
+  Office: "fas fa-briefcase",
+  Restaurant: "fas fa-utensils",
+  Residential: "fas fa-home",
+  Cinema: "fas fa-film",
+  Hotel: "fas fa-hotel",
 };
 
 export default function Hero({
@@ -36,15 +36,14 @@ export default function Hero({
   const [cheapest, setCheapest] = useState(false);
   const [lessWalking, setLessWalking] = useState(true);
 
-  // Autocomplete state
   const [fromSuggestions, setFromSuggestions] = useState([]);
   const [toSuggestions, setToSuggestions] = useState([]);
   const [showFromDropdown, setShowFromDropdown] = useState(false);
   const [showToDropdown, setShowToDropdown] = useState(false);
+
   const fromRef = useRef(null);
   const toRef = useRef(null);
 
-  // Close dropdowns on outside click
   useEffect(() => {
     const handler = (e) => {
       if (fromRef.current && !fromRef.current.contains(e.target)) {
@@ -82,14 +81,17 @@ export default function Hero({
     setShowToDropdown(false);
   };
 
+  const getIcon = (item) => {
+    return (
+      CATEGORY_ICONS[item.type === "station" ? "station" : item.category] ||
+      "fas fa-location-dot"
+    );
+  };
+
   return (
-    <section
-      id="home"
-      className="bg-gradient-to-b from-[#020617] via-[#020617] to-[#020617] py-20"
-    >
+    <section className="bg-gradient-to-b from-[#020617] via-[#020617] to-[#020617] py-20">
       <div className="container mx-auto px-4">
         <div className="max-w-5xl mx-auto text-center">
-          {/* Heading */}
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Smart Route Planning for Delhi Commuters
           </h2>
@@ -99,43 +101,49 @@ export default function Hero({
             Delhi Metro and DTC buses
           </p>
 
-          {/* Form Card */}
-          <div
-            className="bg-[#020617] border border-gray-800 rounded-2xl p-6 md:p-8
-                       shadow-[0_0_40px_rgba(0,0,0,0.9)]"
-          >
+          <div id="route-search" className="bg-[#020617] border border-gray-800 rounded-2xl p-6 md:p-8 shadow-[0_0_40px_rgba(0,0,0,0.9)]">
+
             {/* Inputs */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              {/* From input with autocomplete */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+
+              {/* FROM INPUT */}
               <div className="relative" ref={fromRef}>
                 <input
-                  id="from-input"
                   value={from}
                   onChange={(e) => handleFromChange(e.target.value)}
                   onFocus={() => {
                     if (fromSuggestions.length > 0) setShowFromDropdown(true);
                   }}
                   placeholder="Starting Point (e.g. India Gate, Rajiv Chowk)"
-                  className="dark-input w-full"
+                  className="w-full px-4 py-3 bg-[#0f172a] border border-gray-700 rounded-xl text-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
                 />
+
                 {showFromDropdown && fromSuggestions.length > 0 && (
                   <div className="absolute z-50 w-full mt-1 bg-[#0f1728] border border-gray-700 rounded-xl shadow-2xl max-h-48 overflow-y-auto">
                     {fromSuggestions.map((item) => (
                       <div
-                        key={item.name}
+                        key={item.name + item.type}
                         className="px-4 py-2.5 hover:bg-blue-900/40 cursor-pointer text-left text-gray-200 text-sm border-b border-gray-800 last:border-b-0 transition-colors flex items-center gap-2"
                         onClick={() => selectFromStation(item.name)}
                       >
-                        <i className={`text-blue-500 text-[10px] ${CATEGORY_ICONS[item.type === 'station' ? 'station' : item.category] || 'fas fa-location-dot'}`}></i>
-                        <span className="font-bold uppercase tracking-tighter">{item.name}</span>
-                        {item.type === 'place' && <span className="text-[10px] text-gray-500 ml-auto">{item.category}</span>}
+                        <i className={`text-blue-500 text-[10px] ${getIcon(item)}`}></i>
+
+                        <span className="font-bold uppercase tracking-tighter">
+                          {item.name}
+                        </span>
+
+                        {item.type === "place" && (
+                          <span className="text-[10px] text-gray-500 ml-auto">
+                            {item.category}
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* To input with autocomplete */}
+              {/* TO INPUT */}
               <div className="relative" ref={toRef}>
                 <input
                   value={to}
@@ -144,19 +152,28 @@ export default function Hero({
                     if (toSuggestions.length > 0) setShowToDropdown(true);
                   }}
                   placeholder="Destination (e.g. Red Fort, Hauz Khas)"
-                  className="dark-input w-full"
+                  className="w-full px-4 py-3 bg-[#0f172a] border border-gray-700 rounded-xl text-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
                 />
+
                 {showToDropdown && toSuggestions.length > 0 && (
                   <div className="absolute z-50 w-full mt-1 bg-[#0f1728] border border-gray-700 rounded-xl shadow-2xl max-h-48 overflow-y-auto">
                     {toSuggestions.map((item) => (
                       <div
-                        key={item.name}
+                        key={item.name + item.type}
                         className="px-4 py-2.5 hover:bg-blue-900/40 cursor-pointer text-left text-gray-200 text-sm border-b border-gray-800 last:border-b-0 transition-colors flex items-center gap-2"
                         onClick={() => selectToStation(item.name)}
                       >
-                        <span>{CATEGORY_ICONS[item.type === 'station' ? 'station' : item.category] || '📍'}</span>
-                        <span>{item.name}</span>
-                        {item.type === 'place' && <span className="text-[10px] text-gray-500 ml-auto">{item.category}</span>}
+                        <i className={`text-blue-500 text-[10px] ${getIcon(item)}`}></i>
+
+                        <span className="font-bold uppercase tracking-tighter">
+                          {item.name}
+                        </span>
+
+                        {item.type === "place" && (
+                          <span className="text-[10px] text-gray-500 ml-auto">
+                            {item.category}
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -167,102 +184,27 @@ export default function Hero({
                 type="datetime-local"
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="dark-input"
+                className="w-full px-4 py-3 bg-[#0f172a] border border-gray-700 rounded-xl text-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500 transition-all"
               />
             </div>
 
-            {/* Options + Button */}
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              {/* Checkboxes */}
-              <div className="flex gap-6 text-gray-300 text-sm">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={fastest}
-                    onChange={() => setFastest(!fastest)}
-                    className="accent-blue-500 w-4 h-4"
-                  />
-                  Fastest
-                </label>
+            {/* BUTTON */}
+            <button
+              onClick={() => onFindRoute({ fastest, cheapest, lessWalking })}
+              disabled={loading}
+              className="px-8 py-3 rounded-xl text-white bg-blue-600 hover:bg-blue-500 transition"
+            >
+              {loading ? "Finding Routes..." : "Find Optimal Route"}
+            </button>
 
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={cheapest}
-                    onChange={() => setCheapest(!cheapest)}
-                    className="accent-blue-500 w-4 h-4"
-                  />
-                  Cheapest
-                </label>
-
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={lessWalking}
-                    onChange={() => setLessWalking(!lessWalking)}
-                    className="accent-blue-500 w-4 h-4"
-                  />
-                  Less Walking
-                </label>
-              </div>
-
-              {/* Button */}
-              <button
-                onClick={() => onFindRoute({ fastest, cheapest, lessWalking })}
-                disabled={loading}
-                className="flex items-center justify-center gap-2
-                           px-8 py-3 rounded-xl font-medium text-white
-                           bg-blue-600 hover:bg-blue-500 transition
-                           disabled:opacity-60
-                           shadow-[0_0_20px_rgba(59,130,246,0.6)]"
-              >
-                {loading ? (
-                  <>
-                    <i className="fas fa-spinner fa-spin"></i>
-                    Finding Routes...
-                  </>
-                ) : (
-                  <>
-                    <i className="fas fa-route"></i>
-                    Find Optimal Route
-                  </>
-                )}
-              </button>
-            </div>
-
-            {/* Error message */}
             {searchError && (
               <div className="mt-4 p-3 bg-red-900/30 border border-red-700/50 rounded-xl text-red-300 text-sm">
-                ! {searchError}
+                {searchError}
               </div>
             )}
           </div>
         </div>
       </div>
-
-      {/* Tailwind helper styles */}
-      <style>
-        {`
-          .dark-input {
-            background-color: #020617;
-            border: 1px solid #1f2933;
-            color: #e5e7eb;
-            padding: 0.75rem;
-            border-radius: 0.75rem;
-            outline: none;
-            transition: all 0.2s ease;
-          }
-
-          .dark-input::placeholder {
-            color: #6b7280;
-          }
-
-          .dark-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 1px #3b82f6;
-          }
-        `}
-      </style>
     </section>
   );
 }

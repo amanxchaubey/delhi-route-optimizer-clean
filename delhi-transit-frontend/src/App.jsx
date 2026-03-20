@@ -520,7 +520,7 @@ function App() {
                 </h4>
                 {(() => {
                   const tp = getTimePeriod();
-                  const isPeak = tp.label.includes('Rush');
+                  const isPeak = tp.label.includes('Peak');
                   return (
                     <span className={`px-2 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${isPeak ? 'bg-red-500/10 text-red-300 border border-red-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                       }`}>
@@ -625,9 +625,12 @@ function App() {
           onFareCompare={() => requireAuth(() => setShowFareCalc(true))}
           onMetroMap={() => setShowStaticMap(true)}
           onPopularRoutes={() => {
-            const el = document.getElementById('from-input');
+            const el = document.getElementById('route-search');
             el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            el?.focus();
+            // Focus the first input after scroll completes
+            setTimeout(() => {
+              el?.querySelector('input')?.focus();
+            }, 500);
           }}
         />
 

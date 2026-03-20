@@ -24,14 +24,15 @@ export function AuthProvider({ children }) {
     syncAuth();
 
     // Listen for storage changes (for cross-tab sync)
-    window.addEventListener('storage', (e) => {
+    const onStorageChange = (e) => {
       if (e.key === 'delhi_transit_admin_token') {
         console.log("Auth token changed in another tab, syncing...");
         syncAuth();
       }
-    });
+    };
+    window.addEventListener('storage', onStorageChange);
 
-    return () => window.removeEventListener('storage', syncAuth);
+    return () => window.removeEventListener('storage', onStorageChange);
   }, []);
 
   // Normal login

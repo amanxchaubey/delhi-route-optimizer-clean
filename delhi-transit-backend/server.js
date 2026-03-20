@@ -30,7 +30,9 @@ app.use((req, res, next) => {
 // CORS configuration - IMPORTANT for OAuth
 app.use(cors({
   origin: [
-    'https://route-optimizer-teal.vercel.app'
+    'http://localhost:5173',
+    process.env.CLIENT_URL,
+    'http://localhost:5173'
   ].filter(Boolean),
   credentials: true,
   exposedHeaders: ['Authorization']
@@ -46,10 +48,10 @@ app.use(helmet({
       fontSrc: ["'self'", "https://fonts.gstatic.com", "https://use.fontawesome.com"],
       imgSrc: ["'self'", "data:", "https:", "http:"],
       connectSrc: [
-        "'self'", 
-        "http://localhost:5173", 
-        "http://localhost:5000", 
-        process.env.CLIENT_URL, 
+        "'self'",
+        "http://localhost:5173",
+        "http://localhost:5000",
+        process.env.CLIENT_URL,
         process.env.SERVER_URL
       ].filter(Boolean),
     },
