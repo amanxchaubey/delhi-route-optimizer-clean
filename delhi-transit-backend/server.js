@@ -28,13 +28,31 @@ app.use((req, res, next) => {
 });
 
 // CORS configuration - IMPORTANT for OAuth
+// CORS configuration - IMPORTANT for OAuth
+const allowedOrigins = [
+  'https://delhi-route-optimizer-clean.vercel.app',
+  'https://delhi-route-optimizer-clean-aman-chaubeys-projects.vercel.app', // Alternative Vercel URL
+  process.env.CLIENT_URL
+].filter(Boolean).map(o => o.replace(/\/$/, '')); // Normalize: remove trailing slashes
+
 app.use(cors({
-  origin: [
-    'http://localhost:5173',
-    process.env.CLIENT_URL,
-    'http://localhost:5173'
-  ].filter(Boolean),
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    const normalizedOrigin = origin.replace(/\/$/, '');
+    console.log(`📍 [CORS] Incoming Origin: ${origin}`);
+    
+    if (allowedOrigins.indexOf(normalizedOrigin) !== -1 || process.env.NODE_ENV === 'development') {
+      callback(null, true);
+    } else {
+      console.log(`❌ [CORS] Origin not allowed: ${origin}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   exposedHeaders: ['Authorization']
 }));
 
@@ -49,8 +67,8 @@ app.use(helmet({
       imgSrc: ["'self'", "data:", "https:", "http:"],
       connectSrc: [
         "'self'",
-        "http://localhost:5173",
-        "http://localhost:5000",
+        "https://delhi-route-optimizer-clean.vercel.app",
+        "https://delhi-route-optimizer-clean.onrender.com",
         process.env.CLIENT_URL,
         process.env.SERVER_URL
       ].filter(Boolean),

@@ -8,7 +8,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     passport.use(new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `${process.env.SERVER_URL || 'http://localhost:5000'}/api/oauth/google/callback`,
+        callbackURL: `${process.env.SERVER_URL || 'https://delhi-route-optimizer-clean.onrender.com'}/api/oauth/google/callback`,
     }, async (accessToken, refreshToken, profile, done) => {
         try {
             const user = await findOrCreateOAuthUser(profile, 'google');
@@ -24,7 +24,7 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
     passport.use(new GitHubStrategy({
         clientID: process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: `${process.env.SERVER_URL || 'http://localhost:5000'}/api/oauth/github/callback`,
+        callbackURL: `${process.env.SERVER_URL || 'https://delhi-route-optimizer-clean.onrender.com'}/api/oauth/github/callback`,
         scope: ['user:email'],
     }, async (accessToken, refreshToken, profile, done) => {
         try {

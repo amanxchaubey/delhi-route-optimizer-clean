@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../context/AuthContext';
 
-const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : "https://delhi-route-optimizer-clean.onrender.com/api";
 
 export default function AdminLogin({ onBack }) {
   const { login, loginWithToken, isAuthenticated } = useAuth();
@@ -25,9 +25,6 @@ export default function AdminLogin({ onBack }) {
     const handleOAuthMessage = (event) => {
       // Relaxed origin check for local dev and production
       const expectedOrigins = [
-        "http://localhost:5000",
-        "http://localhost:5173",
-        "http://localhost:5174",
         import.meta.env.VITE_API_URL,
         window.location.origin,
       ].map(o => o?.replace(/\/$/, '')).filter(Boolean);
@@ -69,7 +66,7 @@ export default function AdminLogin({ onBack }) {
     const top = window.screenY + (window.outerHeight - height) / 2;
 
     const popup = window.open(
-      `${import.meta.env.VITE_API_URL || 'http://localhost:5000'}/api/oauth/${providerPath}`,
+      `${import.meta.env.VITE_API_URL || 'https://delhi-route-optimizer-clean.onrender.com'}/api/oauth/${providerPath}`,
       `${provider} Login`,
       `width=${width},height=${height},left=${left},top=${top},toolbar=no,menubar=no`
     );
